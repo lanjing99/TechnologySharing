@@ -79,24 +79,18 @@ class Customer{
     
     
     func statement() -> String{
-        var totalAmount:Float = 0.0
-        var frequentRenterPoint = 0
+
         
         var result = "Rental Record for \(name)  \n"
         
         for (_, rental) in rentals.enumerated(){
- 
-            //add frequent renter points
-            frequentRenterPoint += rental.frequentRenterPoint()
-            
             //show figures for this rental
             result += "\t \(rental.movie.title) \t \(rental.charge()) \n"
-            totalAmount += rental.charge()
         }
         
         //add footer lines
-        result += "Amount owned is \(totalAmount) \n"
-        result += "Your earned \(frequentRenterPoint) frequent renter points"
+        result += "Amount owned is \(totalAmount()) \n"
+        result += "Your earned \(totalFrequentRenterPoint()) frequent renter points"
         
         return result
     }
@@ -105,6 +99,30 @@ class Customer{
     //添加一个HTML的格式输出
     func htmlStatement() -> String{
         return ""
+    }
+    
+    
+    func totalAmount() -> Float {
+//        var result:Float = 0.0
+//        for (_, rental) in rentals.enumerated(){
+//            result += rental.charge()
+//        }
+//        return result
+        
+        return rentals.reduce(0, { (result, rental) -> Float in
+            result + rental.charge()
+        })
+    }
+    
+    func totalFrequentRenterPoint() -> Int {
+//        var result:Int = 0
+//        for (_, rental) in rentals.enumerated(){
+//            result += rental.frequentRenterPoint()
+//        }
+//        return result
+        return rentals.reduce(0, { (result, rental) -> Int in
+            result + rental.frequentRenterPoint()
+        })
     }
 }
 
