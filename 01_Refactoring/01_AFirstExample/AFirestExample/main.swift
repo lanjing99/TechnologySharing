@@ -53,24 +53,7 @@ class Customer{
         var result = "Rental Record for \(name)  \n"
         
         for (_, rental) in rentals.enumerated(){
-            var thisAmount: Float = 0.0
-            
-            switch rental.movie.priceCode {
-            case .REGULAR:
-                thisAmount += 2.0
-                if rental.daysRented > 2{
-                    thisAmount += Float(rental.daysRented - 2) * 1.5
-                }
-                
-            case .NEW_RELEASE:
-                thisAmount += Float(rental.daysRented) * 3
-                
-            case .CHILDRENS:
-                thisAmount += 1.5
-                if rental.daysRented > 3{
-                    thisAmount += Float(rental.daysRented - 3) * 1.5
-                }
-            }
+            let thisAmount: Float = amount(for: rental)
             
             //add frequent renter points
             frequentRenterPoint += 1
@@ -87,6 +70,28 @@ class Customer{
         result += "Amount owned is \(totalAmount) \n"
         result += "Your earned \(frequentRenterPoint) frequent renter points"
         
+        return result
+    }
+    
+    func amount(for rental: Rental) -> Float{
+        var result: Float = 0.0
+        
+        switch rental.movie.priceCode {
+        case .REGULAR:
+            result += 2.0
+            if rental.daysRented > 2{
+                result += Float(rental.daysRented - 2) * 1.5
+            }
+            
+        case .NEW_RELEASE:
+            result += Float(rental.daysRented) * 3
+            
+        case .CHILDRENS:
+            result += 1.5
+            if rental.daysRented > 3{
+                result += Float(rental.daysRented - 3) * 1.5
+            }
+        }
         return result
     }
     
