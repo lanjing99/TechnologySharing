@@ -31,6 +31,28 @@ class Rental{
         self.movie = movie
         self.daysRented = daysRented
     }
+    
+    func charge() -> Float{
+        var result: Float = 0.0
+        
+        switch movie.priceCode {
+        case .REGULAR:
+            result += 2.0
+            if daysRented > 2{
+                result += Float(daysRented - 2) * 1.5
+            }
+            
+        case .NEW_RELEASE:
+            result += Float(daysRented) * 3
+            
+        case .CHILDRENS:
+            result += 1.5
+            if daysRented > 3{
+                result += Float(daysRented - 3) * 1.5
+            }
+        }
+        return result
+    }
 }
 
 class Customer{
@@ -53,8 +75,7 @@ class Customer{
         var result = "Rental Record for \(name)  \n"
         
         for (_, rental) in rentals.enumerated(){
-            let thisAmount: Float = amount(for: rental)
-            
+ 
             //add frequent renter points
             frequentRenterPoint += 1
             if rental.movie.priceCode == .NEW_RELEASE && rental.daysRented > 1 {
@@ -62,8 +83,8 @@ class Customer{
             }
             
             //show figures for this rental
-            result += "\t \(rental.movie.title) \t \(thisAmount) \n"
-            totalAmount += thisAmount
+            result += "\t \(rental.movie.title) \t \(rental.charge()) \n"
+            totalAmount += rental.charge()
         }
         
         //add footer lines
@@ -73,27 +94,6 @@ class Customer{
         return result
     }
     
-    func amount(for rental: Rental) -> Float{
-        var result: Float = 0.0
-        
-        switch rental.movie.priceCode {
-        case .REGULAR:
-            result += 2.0
-            if rental.daysRented > 2{
-                result += Float(rental.daysRented - 2) * 1.5
-            }
-            
-        case .NEW_RELEASE:
-            result += Float(rental.daysRented) * 3
-            
-        case .CHILDRENS:
-            result += 1.5
-            if rental.daysRented > 3{
-                result += Float(rental.daysRented - 3) * 1.5
-            }
-        }
-        return result
-    }
     
     //添加一个HTML的格式输出
     func htmlStatement() -> String{
