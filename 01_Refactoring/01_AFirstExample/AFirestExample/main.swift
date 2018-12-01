@@ -1,5 +1,13 @@
-import UIKit
+//
+//  *@项目名称:  AFirestExample
+//  *@文件名称:  main.swift
+//  *@Date 2018/12/1
+//  *@Author lanjing 
+//  *@Copyright © :  2014-2018 X-Financial Inc.   All rights reserved.
+//  *注意：本内容仅限于小赢科技有限责任公内部传阅，禁止外泄以及用于其他的商业目的。
+//
 
+import Foundation
 
 enum PriceCode{
     case CHILDRENS
@@ -48,7 +56,7 @@ class Customer{
         
         for (_, rental) in rentals.enumerated(){
             var thisAmount: Float = 0.0
-    
+            
             switch rental.movie.priceCode {
             case .REGULAR:
                 thisAmount += 2.0
@@ -58,7 +66,7 @@ class Customer{
                 
             case .NEW_RELEASE:
                 thisAmount += Float(rental.daysRented) * 3
-            
+                
             case .CHILDRENS:
                 thisAmount += 1.5
                 if rental.daysRented > 3{
@@ -96,3 +104,6 @@ customer.addRental(rental2)
 customer.addRental(rental2)
 
 print(customer.statement())
+
+//print("Hello, World!")
+
