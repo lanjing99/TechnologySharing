@@ -15,19 +15,20 @@ enum PriceCode{
 
 class Movie{
     var title: String
-//    var priceCode : PriceCode
+    var price : Price
     
 //    init(title: String, priceCode: PriceCode) {
 //        self.title = title
 //        self.priceCode = priceCode
 //    }
     
-    init(title: String) {
+    init(title: String, price: Price) {
         self.title = title
+        self.price = price
     }
     
     func charge(for daysRented: Int) -> Float{
-        return 0.0
+        return price.charge(for:daysRented)
     }
     
     func frequentRenterPoint(for daysRented: Int) -> Int{
@@ -35,7 +36,14 @@ class Movie{
     }
 }
 
-class RegularMovie: Movie{
+
+class Price{
+    func charge(for daysRented: Int) -> Float {
+        return 0.0
+    }
+}
+
+class RegularPrice: Price{
     override func charge(for daysRented: Int) -> Float {
         var result: Float = 0.0
         result += 2.0
@@ -46,7 +54,8 @@ class RegularMovie: Movie{
     }
 }
 
-class ChildrenMovie: Movie {
+
+class ChildrenPrice: Price {
     override func charge(for daysRented: Int) -> Float {
         var result: Float = 0.0
         result += 1.5
@@ -57,19 +66,11 @@ class ChildrenMovie: Movie {
     }
 }
 
-class NewReleaseMovie: Movie {
+class NewReleasePrice: Price {
     override func charge(for daysRented: Int) -> Float {
         var result: Float = 0.0
         result += Float(daysRented) * 3
         return result
-    }
-    
-    override func frequentRenterPoint(for daysRented: Int) -> Int {
-        var frequentRenterPoint = 1
-        if  daysRented > 1 {
-            frequentRenterPoint += 1
-        }
-        return frequentRenterPoint
     }
 }
 
@@ -128,24 +129,13 @@ class Customer{
     }
     
     
-    func totalAmount() -> Float {
-//        var result:Float = 0.0
-//        for (_, rental) in rentals.enumerated(){
-//            result += rental.charge()
-//        }
-//        return result
-        
+    func totalAmount() -> Float {        
         return rentals.reduce(0, { (result, rental) -> Float in
             result + rental.charge()
         })
     }
     
     func totalFrequentRenterPoint() -> Int {
-//        var result:Int = 0
-//        for (_, rental) in rentals.enumerated(){
-//            result += rental.frequentRenterPoint()
-//        }
-//        return result
         return rentals.reduce(0, { (result, rental) -> Int in
             result + rental.frequentRenterPoint()
         })
@@ -153,9 +143,9 @@ class Customer{
 }
 
 
-let movie1 = RegularMovie.init(title: "肖申克的救赎")
-let movie2 = ChildrenMovie.init(title: "狮子王")
-let movie3 = NewReleaseMovie.init(title: "生活万岁")
+let movie1 = Movie.init(title: "肖申克的救赎", price: RegularPrice.init())
+let movie2 = Movie.init(title: "狮子王", price: ChildrenPrice.init())
+let movie3 = Movie.init(title: "生活万岁", price: NewReleasePrice.init())
 
 let rental1 = Rental.init(movie: movie1, daysRented: 2)
 let rental2 = Rental.init(movie: movie2, daysRented: 1)
