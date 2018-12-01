@@ -2,9 +2,7 @@
 //  *@项目名称:  AFirestExample
 //  *@文件名称:  main.swift
 //  *@Date 2018/12/1
-//  *@Author lanjing 
-//  *@Copyright © :  2014-2018 X-Financial Inc.   All rights reserved.
-//  *注意：本内容仅限于小赢科技有限责任公内部传阅，禁止外泄以及用于其他的商业目的。
+//  *@Author lanjing
 //
 
 import Foundation
@@ -74,18 +72,27 @@ class Customer{
                 }
             }
             
+            //add frequent renter points
             frequentRenterPoint += 1
             if rental.movie.priceCode == .NEW_RELEASE && rental.daysRented > 1 {
                 frequentRenterPoint += 1
             }
             
+            //show figures for this rental
             result += "\t \(rental.movie.title) \t \(thisAmount) \n"
             totalAmount += thisAmount
         }
         
-        
+        //add footer lines
+        result += "Amount owned is \(totalAmount) \n"
+        result += "Your earned \(frequentRenterPoint) frequent renter points"
         
         return result
+    }
+    
+    //添加一个HTML的格式输出
+    func htmlStatement() -> String{
+        return ""
     }
 }
 
@@ -101,7 +108,7 @@ let rental3 = Rental.init(movie: movie3, daysRented: 3)
 let customer = Customer.init(name: "lanjing")
 customer.addRental(rental1)
 customer.addRental(rental2)
-customer.addRental(rental2)
+customer.addRental(rental3)
 
 print(customer.statement())
 
