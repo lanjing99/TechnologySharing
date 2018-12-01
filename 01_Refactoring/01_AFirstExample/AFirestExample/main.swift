@@ -53,6 +53,16 @@ class Rental{
         }
         return result
     }
+    
+    func frequentRenterPoint() -> Int{
+        //add frequent renter points
+        var frequentRenterPoint = 0
+        frequentRenterPoint += 1
+        if movie.priceCode == .NEW_RELEASE && daysRented > 1 {
+            frequentRenterPoint += 1
+        }
+        return frequentRenterPoint
+    }
 }
 
 class Customer{
@@ -77,10 +87,7 @@ class Customer{
         for (_, rental) in rentals.enumerated(){
  
             //add frequent renter points
-            frequentRenterPoint += 1
-            if rental.movie.priceCode == .NEW_RELEASE && rental.daysRented > 1 {
-                frequentRenterPoint += 1
-            }
+            frequentRenterPoint += rental.frequentRenterPoint()
             
             //show figures for this rental
             result += "\t \(rental.movie.title) \t \(rental.charge()) \n"
