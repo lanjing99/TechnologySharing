@@ -15,11 +15,61 @@ enum PriceCode{
 
 class Movie{
     var title: String
-    var priceCode : PriceCode
+//    var priceCode : PriceCode
     
-    init(title: String, priceCode: PriceCode) {
+//    init(title: String, priceCode: PriceCode) {
+//        self.title = title
+//        self.priceCode = priceCode
+//    }
+    
+    init(title: String) {
         self.title = title
-        self.priceCode = priceCode
+    }
+    
+    func charge(for daysRented: Int) -> Float{
+        return 0.0
+    }
+    
+    func frequentRenterPoint(for daysRented: Int) -> Int{
+        return 1
+    }
+}
+
+class RegularMovie: Movie{
+    override func charge(for daysRented: Int) -> Float {
+        var result: Float = 0.0
+        result += 2.0
+        if daysRented > 2{
+            result += Float(daysRented - 2) * 1.5
+        }
+        return result
+    }
+}
+
+class ChildrenMovie: Movie {
+    override func charge(for daysRented: Int) -> Float {
+        var result: Float = 0.0
+        result += 1.5
+        if daysRented > 3{
+            result += Float(daysRented - 3) * 1.5
+        }
+        return result
+    }
+}
+
+class NewReleaseMovie: Movie {
+    override func charge(for daysRented: Int) -> Float {
+        var result: Float = 0.0
+        result += Float(daysRented) * 3
+        return result
+    }
+    
+    override func frequentRenterPoint(for daysRented: Int) -> Int {
+        var frequentRenterPoint = 1
+        if  daysRented > 1 {
+            frequentRenterPoint += 1
+        }
+        return frequentRenterPoint
     }
 }
 
@@ -33,35 +83,11 @@ class Rental{
     }
     
     func charge() -> Float{
-        var result: Float = 0.0
-        
-        switch movie.priceCode {
-        case .REGULAR:
-            result += 2.0
-            if daysRented > 2{
-                result += Float(daysRented - 2) * 1.5
-            }
-            
-        case .NEW_RELEASE:
-            result += Float(daysRented) * 3
-            
-        case .CHILDRENS:
-            result += 1.5
-            if daysRented > 3{
-                result += Float(daysRented - 3) * 1.5
-            }
-        }
-        return result
+        return movie.charge(for: daysRented)
     }
     
     func frequentRenterPoint() -> Int{
-        //add frequent renter points
-        var frequentRenterPoint = 0
-        frequentRenterPoint += 1
-        if movie.priceCode == .NEW_RELEASE && daysRented > 1 {
-            frequentRenterPoint += 1
-        }
-        return frequentRenterPoint
+        return movie.frequentRenterPoint(for: daysRented)
     }
 }
 
@@ -127,9 +153,9 @@ class Customer{
 }
 
 
-let movie1 = Movie.init(title: "肖申克的救赎", priceCode: .REGULAR)
-let movie2 = Movie.init(title: "狮子王", priceCode: .CHILDRENS)
-let movie3 = Movie.init(title: "生活万岁", priceCode: .NEW_RELEASE)
+let movie1 = RegularMovie.init(title: "肖申克的救赎")
+let movie2 = ChildrenMovie.init(title: "狮子王")
+let movie3 = NewReleaseMovie.init(title: "生活万岁")
 
 let rental1 = Rental.init(movie: movie1, daysRented: 2)
 let rental2 = Rental.init(movie: movie2, daysRented: 1)
