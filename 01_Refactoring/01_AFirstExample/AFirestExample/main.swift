@@ -92,12 +92,54 @@ class Rental{
     }
 }
 
+class Statement{
+    func value(of customer: Customer) -> String{
+        return ""
+    }
+}
+
+class TextStatement: Statement{
+    override func value(of customer: Customer) -> String {
+        var result = "Rental Record for \(customer.name)  \n"
+        
+        for (_, rental) in customer.rentals.enumerated(){
+            //show figures for this rental
+            result += "\t \(rental.movie.title) \t \(rental.charge()) \n"
+        }
+        
+        //add footer lines
+        result += "Amount owned is \(customer.totalAmount()) \n"
+        result += "Your earned \(customer.totalFrequentRenterPoint()) frequent renter points"
+        
+        return result
+    }
+}
+
+class HtmlStatement: Statement{
+    override func value(of customer: Customer) -> String {
+        var result = "<h1>Rental Record for \(customer.name)  </h1>"
+        
+        for (_, rental) in customer.rentals.enumerated(){
+            //show figures for this rental
+            result += "<p> \(rental.movie.title) \t \(rental.charge()) </p>"
+        }
+        
+        //add footer lines
+        result += "<p> Amount owned is \(customer.totalAmount()) </p>"
+        result += "</p> Your earned <EM> \(customer.totalFrequentRenterPoint()) <EM> frequent renter points </p>"
+        
+        return result
+    }
+}
+
 class Customer{
-    private var name: String
-    private var rentals =  [Rental]()
+    var name: String
+    var rentals =  [Rental]()
+    var statement: Statement
     
-    init(name: String) {
+    init(name: String, statement: Statement) {
         self.name = name
+        self.statement = statement
     }
     
     public func addRental(_ rental: Rental){
@@ -105,27 +147,8 @@ class Customer{
     }
     
     
-    func statement() -> String{
-
-        
-        var result = "Rental Record for \(name)  \n"
-        
-        for (_, rental) in rentals.enumerated(){
-            //show figures for this rental
-            result += "\t \(rental.movie.title) \t \(rental.charge()) \n"
-        }
-        
-        //add footer lines
-        result += "Amount owned is \(totalAmount()) \n"
-        result += "Your earned \(totalFrequentRenterPoint()) frequent renter points"
-        
-        return result
-    }
-    
-    
-    //添加一个HTML的格式输出
-    func htmlStatement() -> String{
-        return ""
+    func output() -> String{
+        return statement.value(of: self)
     }
     
     
@@ -151,12 +174,12 @@ let rental1 = Rental.init(movie: movie1, daysRented: 2)
 let rental2 = Rental.init(movie: movie2, daysRented: 1)
 let rental3 = Rental.init(movie: movie3, daysRented: 3)
 
-let customer = Customer.init(name: "lanjing")
+let customer = Customer.init(name: "lanjing", statement: HtmlStatement.init())
 customer.addRental(rental1)
 customer.addRental(rental2)
 customer.addRental(rental3)
 
-print(customer.statement())
+print(customer.output())
 
 //print("Hello, World!")
 
