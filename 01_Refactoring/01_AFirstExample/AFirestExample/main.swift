@@ -93,41 +93,62 @@ class Rental{
 }
 
 class Statement{
-    func value(of customer: Customer) -> String{
-        return ""
-    }
-}
-
-class TextStatement: Statement{
-    override func value(of customer: Customer) -> String {
-        var result = "Rental Record for \(customer.name)  \n"
+    final func value(of customer: Customer) -> String {
+        var result = header(for: customer)
         
         for (_, rental) in customer.rentals.enumerated(){
             //show figures for this rental
-            result += "\t \(rental.movie.title) \t \(rental.charge()) \n"
+            result += value(for: rental)
         }
+        result += footer(for: customer)
         
+        return result
+    }
+    
+    func header(for customer: Customer) -> String {
+        return ""
+    }
+    
+    func value(for rental: Rental) -> String{
+        return ""
+    }
+    
+    func footer(for customer: Customer) -> String{
+        return ""
+    }
+    
+}
+
+class TextStatement: Statement{
+    override func header(for customer: Customer) -> String {
+        return "Rental Record for \(customer.name)  \n"
+    }
+    
+    override func value(for rental: Rental) -> String{
+        return "\t \(rental.movie.title) \t \(rental.charge()) \n"
+    }
+    
+    override func footer(for customer: Customer) -> String{
         //add footer lines
-        result += "Amount owned is \(customer.totalAmount()) \n"
+        var result = "Amount owned is \(customer.totalAmount()) \n"
         result += "Your earned \(customer.totalFrequentRenterPoint()) frequent renter points"
-        
         return result
     }
 }
 
 class HtmlStatement: Statement{
-    override func value(of customer: Customer) -> String {
-        var result = "<h1>Rental Record for \(customer.name)  </h1>"
-        
-        for (_, rental) in customer.rentals.enumerated(){
-            //show figures for this rental
-            result += "<p> \(rental.movie.title) \t \(rental.charge()) </p>"
-        }
-        
+    override func header(for customer: Customer) -> String {
+        return "<h1>Rental Record for \(customer.name)  </h1>"
+    }
+    
+    override func value(for rental: Rental) -> String{
+        return "<p> \(rental.movie.title) \t \(rental.charge()) </p>"
+    }
+    
+    override func footer(for customer: Customer) -> String{
         //add footer lines
-        result += "<p> Amount owned is \(customer.totalAmount()) </p>"
-        result += "</p> Your earned <EM> \(customer.totalFrequentRenterPoint()) <EM> frequent renter points </p>"
-        
+        var result = "<p>Amount owned is \(customer.totalAmount()) </p>"
+        result += "<p>Your earned <EM>\(customer.totalFrequentRenterPoint())</EM> frequent renter points</p>"
         return result
     }
 }
